@@ -1,0 +1,219 @@
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Layout Headaches</title>
+
+<style type="text/css">
+
+	*
+	{
+		padding: 0;
+		margin: 0;
+		
+		outline: none;
+		border: none;
+	}
+	
+	
+	#wrapper
+	{
+		width: 100%;
+		height: 280px;
+		
+		overflow: hidden;
+	}
+	
+	.mountainView
+	{
+		width: inherit;
+		height: inherit;
+		
+		background: black;
+		
+		position: relative;
+	}
+	
+	.mountainView-C
+	{
+		width: 320px;
+		height: inherit;
+		
+		position: absolute;
+		
+		left:0; right:0; top:0; bottom:0;
+		
+		margin: 0 auto;
+		
+		z-index: 0;		
+	}
+	
+	.mountainView-C div
+	{
+		width: 320px;
+		height: 80px;
+		
+		position: absolute;
+		
+		bottom: 0;
+		
+		background: url(testMountain.png) no-repeat center top;
+	}
+	
+	.mountainView-L
+	{
+		width: 540px;
+		height: inherit;
+		
+		position: absolute;
+		
+		left: 0;
+		bottom: 0;
+	}
+	
+	.mountainView-R
+	{
+		width: 540px;
+		height: inherit;
+		
+		position: absolute;
+	
+		right: 0;
+		bottom: 0;
+	}
+	
+	.mountainView-L div, .mountainView-R div
+	{
+		width: 534px;
+		height: 110px;
+		
+		position: absolute;
+		
+		background: url(bigMountain.png) no-repeat left top;
+	}
+	
+	.mountainView-L div
+	{
+		left: 0;
+		bottom: 0;
+	}
+	
+	.mountainView-R div
+	{
+		right: 0;
+		bottom: 0;
+	}
+	
+	
+	.fieldView
+	{
+		width: 100%;
+		height: auto;
+		
+		background: #004753;
+		
+		position: absolute;
+		
+		left: 0; right:0; top:0; bottom: 0;
+		
+		margin: 280px auto 0 auto;
+		
+		z-index: 0;
+	}
+	
+	
+
+</style>
+
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+<script type="text/javascript">
+	
+	var trace = function(str){ console.log(str); };
+	
+	var MOUNTAIN;
+	
+	$(document).ready(function(){ init(); });
+	
+	
+	function init()
+	{
+		MOUNTAIN = {};
+		
+		MOUNTAIN.measure_FULL 	= $(".mountainView").width();
+		MOUNTAIN.measure_SIDE 	= $(".mountainView-L").width();
+		MOUNTAIN.measure_CENTER = $(".mountainView-C").width();
+		
+		$(window).on("resize", screenUpdate);
+		
+		screenUpdate(null);
+	}
+	
+	function screenUpdate(event)
+	{
+		MOUNTAIN.measure_FULL 	= $(".mountainView").width();
+		
+		MOUNTAIN.sideWidth = Math.abs(Math.floor((MOUNTAIN.measure_FULL - MOUNTAIN.measure_CENTER) * 0.5));
+		MOUNTAIN.x_adjust = 0;
+		
+		if(MOUNTAIN.sideWidth < MOUNTAIN.measure_SIDE)
+		{
+			MOUNTAIN.x_adjust = Math.abs(MOUNTAIN.measure_SIDE - MOUNTAIN.sideWidth);
+			
+			adjuster($(".mountainView-L"), -MOUNTAIN.x_adjust);
+			adjuster($(".mountainView-R"), MOUNTAIN.x_adjust);
+		}		
+	}
+	
+	function adjuster(div, x)
+	{
+		var css = 	{
+						"-webkit-transform" : "translateX(" + x + "px)",
+						"transform" 		: "translateX(" + x + "px)"
+					};
+					
+		$(div).css(css);
+	}
+
+</script>
+
+</head>
+
+<body>
+
+<div id="wrapper">
+	
+	<div class="mountainView">
+		
+		<div class="mountainView-L">
+			
+			<div></div>
+			
+		</div>
+		
+		<div class="mountainView-C">
+			
+			<div></div>
+		
+		</div>
+		
+		<div class="mountainView-R">
+			
+			<div></div>
+			
+		</div>
+		
+	</div>
+	
+	<div class="fieldView">
+	
+	</div>
+
+</div>
+
+</body>	
+	
+</html>
